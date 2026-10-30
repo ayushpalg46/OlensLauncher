@@ -15,11 +15,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DarkMode
+import androidx.compose.material.icons.rounded.FormatSize
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.LabelOff
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.SwipeRight
 import androidx.compose.material.icons.rounded.Vibration
 import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.WbSunny
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
@@ -54,6 +57,9 @@ fun SettingsDialog(
     val enableHaptics by repository.preferences.enableHaptics.collectAsState(initial = true)
     val scrubberOnRight by repository.preferences.scrubberOnRight.collectAsState(initial = true)
     val pureAmoled by repository.preferences.pureAmoledMode.collectAsState(initial = true)
+    val iconSize by repository.preferences.iconSize.collectAsState(initial = 40)
+    val hideNames by repository.preferences.hideAppNames.collectAsState(initial = false)
+    val showWeather by repository.preferences.showWeather.collectAsState(initial = true)
     val hiddenApps by repository.hiddenApps.collectAsState()
 
     var showHiddenList by remember { mutableStateOf(false) }
@@ -69,25 +75,15 @@ fun SettingsDialog(
         },
         text = {
             val context = androidx.compose.ui.platform.LocalContext.current
+            val otherLaunchers = remember { com.olens.launcher.util.LauncherSwitcherHelper.getOtherLaunchers(context) }
+
             Column(modifier = Modifier.fillMaxWidth()) {
-                // Set as Default Home Launcher
+                // Switch / Restore Old Launcher
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            try {
-                                val intent = android.content.Intent(android.provider.Settings.ACTION_HOME_SETTINGS).apply {
-                                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                                }
-                                context.startActivity(intent)
-                            } catch (e: Exception) {
-                                try {
-                                    val fallback = android.content.Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS).apply {
-                                        addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    }
-                                    context.startActivity(fallback)
-                                } catch (ignored: Exception) {}
-                            }
+                            com.olens.launcher.util.LauncherSwitcherHelper.openSystemHomeSettings(context)
                         }
                         .padding(vertical = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -101,15 +97,48 @@ fun SettingsDialog(
                     Spacer(modifier = Modifier.width(16.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Default Launcher",
+                            text = "Switch Default Launcher",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = "Set Olens as your home screen",
+                            text = "Switch to your old launcher or set default",
                             fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                    }
+                }
+
+                // If other launchers exist on the device, list them directly
+                if (otherLaunchers.isNotEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 40.dp, bottom = 8.dp)
+                    ) {
+                        Text(
+                            text = "Detected on your phone:",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        otherLaunchers.forEach { launcher ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        com.olens.launcher.util.LauncherSwitcherHelper.launchSpecificLauncher(context, launcher)
+                                    }
+                                    .padding(vertical = 5.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "→ Switch to ${launcher.label}",
+                                    fontSize = 13.5.sp,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -222,6 +251,82 @@ fun SettingsDialog(
                         onCheckedChange = { enabled ->
                             coroutineScope.launch {
                                 repository.preferences.setPureAmoledMode(enabled)
+                            }
+                        }
+                    )
+                }
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+                // Weather Glance Toggle
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.WbSunny,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Weather Glance",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "Show temperature & forecast at a glance",
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Switch(
+                        checked = showWeather,
+                        onCheckedChange = { enabled ->
+                            coroutineScope.launch {
+                                repository.preferences.setShowWeather(enabled)
+                            }
+                        }
+                    )
+                }
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+                // Hide App Names (Minimalist Icons-Only Mode)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.LabelOff,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Hide App Labels",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "Show icons only on home favorites",
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Switch(
+                        checked = hideNames,
+                        onCheckedChange = { hide ->
+                            coroutineScope.launch {
+                                repository.preferences.setHideAppNames(hide)
                             }
                         }
                     )

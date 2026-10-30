@@ -199,7 +199,9 @@ fun HomeScreen(
                         AppRow(
                             app = app,
                             onClick = { repository.launchApp(app) },
-                            onLongClick = { selectedAppForAction = app }
+                            onLongClick = { selectedAppForAction = app },
+                            iconSizeDp = iconSizeDp,
+                            hideLabel = false
                         )
                     }
 
@@ -215,7 +217,7 @@ fun HomeScreen(
                                                 addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
                                             }
                                             context.startActivity(intent)
-                                        } catch (_: Exception) {}
+                                        } catch (e: Exception) {}
                                     }
                                     .padding(horizontal = 24.dp, vertical = 14.dp),
                                 verticalAlignment = Alignment.CenterVertically

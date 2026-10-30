@@ -66,8 +66,8 @@ fun AlphabetScrubber(
             NativeEngine.calculateWaveOffsets(
                 selectedIndex = selectedIndexFloat,
                 totalCount = totalLetters,
-                waveRadius = 3.5f,
-                maxOffsetPx = 48f
+                waveRadius = 3.8f,
+                maxOffsetPx = 52f
             )
         } else {
             FloatArray(totalLetters) { 0f }
