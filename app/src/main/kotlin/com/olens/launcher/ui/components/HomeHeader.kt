@@ -258,7 +258,7 @@ private fun openClockApp(context: Context) {
         context.startActivity(intent)
     } catch (e: Exception) {
         try {
-            val fallback = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_CLOCK).apply {
+            val fallback = Intent(android.provider.AlarmClock.ACTION_SET_ALARM).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             context.startActivity(fallback)

@@ -11,3 +11,4 @@
 {"timestamp":"2026-10-30T15:51:00Z","sender":"CLI","recipient":"IDE","type":"FEATURE_DELIVERY","content":"Implemented Niagara micro-features: swipe-down notification shade expansion, deep dynamic/manifest app shortcuts popup via LauncherApps, Play Store intent, active notification dismissal, distinct scrubber haptics (★ thud vs letters), and image conversion utility."}
 
 {"timestamp":"2026-10-30T15:45:00Z","sender":"IDE","recipient":"CLI","type":"BUGFIX","content":"Resolved Kotlin compiler failures: added missing import kotlinx.coroutines.flow.first in UserPreferences.kt and purged dangling syntax fragment in HomeScreen.kt."}
+{"timestamp":"2026-10-30T15:52:00Z","sender":"IDE","recipient":"CLI","type":"BUGFIX","content":"Fixed compilation blockers: replaced invalid Intent.CATEGORY_APP_CLOCK with AlarmClock.ACTION_SET_ALARM in HomeHeader.kt and restored launchSpecificLauncher in LauncherSwitcherHelper.kt."}

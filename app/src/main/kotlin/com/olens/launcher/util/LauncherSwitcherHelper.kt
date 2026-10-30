@@ -82,6 +82,19 @@ object LauncherSwitcherHelper {
     /**
      * Directly launches a specific other launcher
      */
+    fun launchSpecificLauncher(context: Context, launcher: OtherLauncherItem) {
+        try {
+            val intent = Intent(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_HOME)
+                component = ComponentName(launcher.packageName, launcher.activityName)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            openSystemHomeSettings(context)
+        }
+    }
+
     /**
      * Emergency Escape: Instantly switches away from Olens Launcher and restores
      * the user's previous/stock launcher as default.
@@ -92,7 +105,7 @@ object LauncherSwitcherHelper {
         // 1. Clear Olens as preferred launcher
         try {
             pm.clearPackagePreferredActivities(context.packageName)
-        } catch (_: Exception) {}
+        } catch (e: Exception) {}
 
         // 2. Identify the stock or alternative launcher on the device
         val others = getOtherLaunchers(context)
@@ -118,7 +131,7 @@ object LauncherSwitcherHelper {
                 }
                 context.startActivity(intent)
                 Toast.makeText(context, "Switching to ${target.label}...", Toast.LENGTH_SHORT).show()
-            } catch (_: Exception) {
+            } catch (e: Exception) {
                 openSystemHomeSettings(context)
                 return
             }
