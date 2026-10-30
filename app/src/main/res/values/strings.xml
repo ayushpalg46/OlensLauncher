@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Olens Launcher</string>
+    <string name="search_hint">Search apps, shortcuts...</string>
+    <string name="favorites_title">Favorites</string>
+    <string name="all_apps_title">All Apps</string>
+    <string name="notification_service_label">Olens Notification Listener</string>
+    
+    <!-- App Context Menu -->
+    <string name="action_add_favorite">Add to Favorites</string>
+    <string name="action_remove_favorite">Remove from Favorites</string>
+    <string name="action_hide_app">Hide App</string>
+    <string name="action_unhide_app">Unhide App</string>
+    <string name="action_app_info">App Info</string>
+    <string name="action_uninstall">Uninstall</string>
+    <string name="action_rename">Rename</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Olens Settings</string>
+    <string name="settings_theme">Theme &amp; Appearance</string>
+    <string name="settings_scrubber">Ergonomic Scrubber</string>
+    <string name="settings_hidden_apps">Hidden Apps</string>
+    <string name="settings_about">About Olens Launcher</string>
+</resources>

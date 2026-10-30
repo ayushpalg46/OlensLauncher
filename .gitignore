@@ -1,0 +1,27 @@
+# Gradle
+.gradle/
+build/
+app/build/
+
+# Rust / Cargo
+target/
+Cargo.lock
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+.DS_Store
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Artifacts & APKs (don't commit large binaries)
+*.apk
+*.aab
+*.zip
+*.dex
+*.log
+__pycache__/
+Niagara*/
+!gradle/wrapper/gradle-wrapper.jar
