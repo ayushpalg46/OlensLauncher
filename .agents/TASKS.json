@@ -108,6 +108,24 @@
       "status": "BACKLOG",
       "priority": "LOW",
       "description": "Optional home screen widget slot above favorites"
+    },
+    {
+      "id": "TASK-012",
+      "title": "Niagara Micro-Features (Swipe Gestures, Deep Shortcuts, Scrubber Haptics, Notification Dismissal)",
+      "assigned_to": "CLI",
+      "status": "COMPLETED",
+      "verified_by": "CLI",
+      "verification_status": "APPROVED",
+      "files": [
+        "app/src/main/kotlin/com/olens/launcher/util/StatusBarHelper.kt",
+        "app/src/main/kotlin/com/olens/launcher/util/AppShortcutsHelper.kt",
+        "app/src/main/kotlin/com/olens/launcher/util/ImageUtils.kt",
+        "app/src/main/kotlin/com/olens/launcher/service/OlensNotificationListener.kt",
+        "app/src/main/kotlin/com/olens/launcher/ui/HomeScreen.kt",
+        "app/src/main/kotlin/com/olens/launcher/ui/components/HomeHeader.kt",
+        "app/src/main/kotlin/com/olens/launcher/ui/components/AppActionDialog.kt",
+        "app/src/main/kotlin/com/olens/launcher/ui/components/AlphabetScrubber.kt"
+      ]
     }
   ]
 }

@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.olens.launcher.model.AppItem
+import com.olens.launcher.util.ImageUtils
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -40,7 +41,7 @@ fun AppRow(
     hideLabel: Boolean = false
 ) {
     val bitmap = remember(app.packageName) {
-        app.icon?.let { drawableToBitmap(it) }
+        app.icon?.let { ImageUtils.drawableToBitmap(it) }
     }
 
     Row(
@@ -101,15 +102,5 @@ fun AppRow(
             }
         }
     }
-}
-
-private fun drawableToBitmap(drawable: Drawable): Bitmap {
-    val width = if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 96
-    val height = if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 96
-    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-    val canvas = Canvas(bitmap)
-    drawable.setBounds(0, 0, canvas.width, canvas.height)
-    drawable.draw(canvas)
-    return bitmap
 }
 

@@ -36,6 +36,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,6 +52,7 @@ import com.olens.launcher.ui.components.AppRow
 import com.olens.launcher.ui.components.HomeHeader
 import com.olens.launcher.ui.components.SearchBar
 import com.olens.launcher.ui.components.SettingsDialog
+import com.olens.launcher.util.StatusBarHelper
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -79,6 +84,22 @@ fun HomeScreen(
     BackHandler(enabled = isSearchActive) {
         isSearchActive = false
         searchQuery = ""
+    }
+
+    // Pull down to expand notification shade (Niagara signature micro-feature)
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                if (available.y > 40f && listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0) {
+                    StatusBarHelper.expandNotificationShade(context)
+                }
+                return Offset.Zero
+            }
+        }
     }
 
     // Compute search filtered list
@@ -280,7 +301,9 @@ fun HomeScreen(
             } else {
                 LazyColumn(
                     state = listState,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .nestedScroll(nestedScrollConnection)
                 ) {
                     // Header Clock & Glanceable info
                     item(key = "header") {

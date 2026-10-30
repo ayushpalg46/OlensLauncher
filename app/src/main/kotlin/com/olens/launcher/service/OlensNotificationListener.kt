@@ -13,8 +13,39 @@ class OlensNotificationListener : NotificationListenerService() {
 
     companion object {
         private const val TAG = "OlensNotification"
+        var instance: OlensNotificationListener? = null
+            private set
+
         private val _notificationsMap = MutableStateFlow<Map<String, String>>(emptyMap())
         val notificationsMap: StateFlow<Map<String, String>> = _notificationsMap.asStateFlow()
+    }
+
+    override fun onListenerConnected() {
+        super.onListenerConnected()
+        instance = this
+        Log.d(TAG, "Notification listener connected")
+    }
+
+    override fun onListenerDisconnected() {
+        super.onListenerDisconnected()
+        instance = null
+        Log.d(TAG, "Notification listener disconnected")
+    }
+
+    /**
+     * Dismisses active status bar notifications for the given package name.
+     */
+    fun dismissNotificationsForPackage(packageName: String) {
+        try {
+            val activeSbns = activeNotifications ?: return
+            for (sbn in activeSbns) {
+                if (sbn.packageName == packageName) {
+                    cancelNotification(sbn.key)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to dismiss notifications for $packageName", e)
+        }
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {

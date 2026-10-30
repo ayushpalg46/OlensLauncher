@@ -81,7 +81,11 @@ fun AlphabetScrubber(
             if (idx != lastSelectedIndex) {
                 lastSelectedIndex = idx
                 if (enableHaptics) {
-                    view.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+                    if (ALPHABET_ITEMS[idx] == "★") {
+                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                    } else {
+                        view.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+                    }
                 }
                 onLetterSelected(ALPHABET_ITEMS[idx])
             }
