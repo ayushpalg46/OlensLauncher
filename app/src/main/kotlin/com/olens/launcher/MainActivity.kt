@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.olens.launcher.ui.HomeScreen
@@ -22,7 +24,9 @@ class MainActivity : ComponentActivity() {
         val repository = (application as OlensApplication).appRepository
 
         setContent {
-            OlensTheme {
+            val pureAmoled by repository.preferences.pureAmoledMode.collectAsState(initial = true)
+
+            OlensTheme(pureAmoled = pureAmoled) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Transparent

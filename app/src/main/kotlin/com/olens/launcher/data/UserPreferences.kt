@@ -19,6 +19,7 @@ class UserPreferences(private val context: Context) {
         val HAPTICS_KEY = booleanPreferencesKey("enable_haptics")
         val SCRUBBER_SIDE_KEY = booleanPreferencesKey("scrubber_on_right")
         val MAX_FAVORITES_KEY = intPreferencesKey("max_favorites")
+        val PURE_AMOLED_KEY = booleanPreferencesKey("pure_amoled_mode")
     }
 
     val favoritePackages: Flow<Set<String>> = context.dataStore.data.map { prefs ->
@@ -45,6 +46,10 @@ class UserPreferences(private val context: Context) {
 
     val maxFavorites: Flow<Int> = context.dataStore.data.map { prefs ->
         prefs[MAX_FAVORITES_KEY] ?: 8
+    }
+
+    val pureAmoledMode: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[PURE_AMOLED_KEY] ?: true
     }
 
     suspend fun setFavorite(packageName: String, isFavorite: Boolean) {
@@ -80,6 +85,12 @@ class UserPreferences(private val context: Context) {
     suspend fun setScrubberOnRight(right: Boolean) {
         context.dataStore.edit { prefs ->
             prefs[SCRUBBER_SIDE_KEY] = right
+        }
+    }
+
+    suspend fun setPureAmoledMode(enabled: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[PURE_AMOLED_KEY] = enabled
         }
     }
 }

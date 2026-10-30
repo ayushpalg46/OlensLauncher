@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.SwipeRight
 import androidx.compose.material.icons.rounded.Vibration
 import androidx.compose.material.icons.rounded.Visibility
@@ -50,6 +51,7 @@ fun SettingsDialog(
     val coroutineScope = rememberCoroutineScope()
     val enableHaptics by repository.preferences.enableHaptics.collectAsState(initial = true)
     val scrubberOnRight by repository.preferences.scrubberOnRight.collectAsState(initial = true)
+    val pureAmoled by repository.preferences.pureAmoledMode.collectAsState(initial = true)
     val hiddenApps by repository.hiddenApps.collectAsState()
 
     var showHiddenList by remember { mutableStateOf(false) }
@@ -134,6 +136,44 @@ fun SettingsDialog(
                         onCheckedChange = { enabled ->
                             coroutineScope.launch {
                                 repository.preferences.setEnableHaptics(enabled)
+                            }
+                        }
+                    )
+                }
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+                // Pure AMOLED Black Mode
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.DarkMode,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Pure AMOLED Black",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "True #000000 for battery saving",
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Switch(
+                        checked = pureAmoled,
+                        onCheckedChange = { enabled ->
+                            coroutineScope.launch {
+                                repository.preferences.setPureAmoledMode(enabled)
                             }
                         }
                     )

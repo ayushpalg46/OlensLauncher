@@ -35,28 +35,56 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF0F172A)
 )
 
+private val PureAmoledColorScheme = darkColorScheme(
+    primary = Color(0xFF818CF8),
+    secondary = Color(0xFF38BDF8),
+    tertiary = Color(0xFFA78BFA),
+    background = Color(0xFF000000),
+    surface = Color(0xFF080808),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onBackground = Color(0xFFF1F5F9),
+    onSurface = Color(0xFFF1F5F9)
+)
+
 @Composable
 fun OlensLauncherTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
+    pureAmoled: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    OlensTheme(darkTheme = darkTheme, dynamicColor = dynamicColor, content = content)
+    OlensTheme(
+        darkTheme = darkTheme,
+        dynamicColor = dynamicColor,
+        pureAmoled = pureAmoled,
+        content = content
+    )
 }
 
 @Composable
 fun OlensTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
+    pureAmoled: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
+    val baseScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
+    }
+
+    val colorScheme = if (pureAmoled && darkTheme) {
+        baseScheme.copy(
+            background = Color.Black,
+            surface = Color(0xFF060606)
+        )
+    } else {
+        baseScheme
     }
 
     MaterialTheme(
