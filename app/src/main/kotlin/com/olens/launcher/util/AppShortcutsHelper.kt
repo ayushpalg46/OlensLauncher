@@ -2,9 +2,7 @@ package com.olens.launcher.util
 
 import android.content.Context
 import android.content.pm.LauncherApps
-import android.content.pm.ShortcutInfo
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Process
 import android.util.Log
 
@@ -24,10 +22,6 @@ object AppShortcutsHelper {
      * Mirrors Niagara Launcher's pop-up shortcut list.
      */
     fun getShortcutsForApp(context: Context, packageName: String): List<AppShortcutItem> {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-            return emptyList()
-        }
-
         return try {
             val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as? LauncherApps
                 ?: return emptyList()
@@ -79,8 +73,6 @@ object AppShortcutsHelper {
      * Launch a specific app shortcut directly into the target activity flow.
      */
     fun launchShortcut(context: Context, packageName: String, shortcutId: String) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) return
-
         try {
             val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as? LauncherApps ?: return
             launcherApps.startShortcut(packageName, shortcutId, null, null, Process.myUserHandle())

@@ -254,17 +254,12 @@ fun HomeHeader(
 
 private fun openClockApp(context: Context) {
     try {
-        val intent = Intent(android.provider.AlarmClock.ACTION_SHOW_ALARMS).apply {
+        val intent = Intent(android.provider.AlarmClock.ACTION_SET_ALARM).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(intent)
     } catch (e: Exception) {
-        try {
-            val fallback = Intent(android.provider.AlarmClock.ACTION_SET_ALARM).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            context.startActivity(fallback)
-        } catch (ignored: Exception) {}
+        // Ignored if no alarm app available
     }
 }
 

@@ -96,25 +96,6 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun OlensLauncherTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
-    pureAmoled: Boolean = false,
-    accentColorName: String = "Niagara Cyan",
-    fontFamilyName: String = "Default",
-    content: @Composable () -> Unit
-) {
-    OlensTheme(
-        darkTheme = darkTheme,
-        dynamicColor = dynamicColor,
-        pureAmoled = pureAmoled,
-        accentColorName = accentColorName,
-        fontFamilyName = fontFamilyName,
-        content = content
-    )
-}
-
-@Composable
 fun OlensTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,

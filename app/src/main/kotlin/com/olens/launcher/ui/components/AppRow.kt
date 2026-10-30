@@ -28,8 +28,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
 import com.olens.launcher.model.AppItem
-import com.olens.launcher.util.ImageUtils
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -43,7 +43,7 @@ fun AppRow(
     hideLabel: Boolean = false
 ) {
     val bitmap = remember(app.packageName) {
-        app.icon?.let { ImageUtils.drawableToBitmap(it) }
+        app.icon?.toBitmap()
     }
 
     val shape = remember(iconShape) {

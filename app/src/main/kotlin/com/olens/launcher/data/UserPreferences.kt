@@ -204,9 +204,5 @@ class UserPreferences(private val context: Context) {
         }
         return result
     }
-
-    fun getCustomLabelFlow(packageName: String): Flow<String?> = context.dataStore.data.map { prefs ->
-        prefs[androidx.datastore.preferences.core.stringPreferencesKey("custom_label_$packageName")]
-    }
 }
 

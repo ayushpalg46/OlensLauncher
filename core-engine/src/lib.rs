@@ -1,20 +1,6 @@
 use jni::objects::{JClass, JObjectArray, JString};
 use jni::sys::{jfloat, jfloatArray, jint, jintArray, jsize};
 use jni::JNIEnv;
-use serde::{Deserialize, Serialize};
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct AppSearchItem {
-    pub package_name: String,
-    pub label: String,
-    pub usage_count: u32,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct SearchResult {
-    pub package_name: String,
-    pub score: i32,
-}
 
 /// Computes a fuzzy matching score between a query and a target label.
 /// Higher score means a better match.
@@ -108,36 +94,6 @@ pub fn calculate_wave(selected_index: f32, total_count: usize, wave_radius: f32,
 // JNI Exports for Android Kotlin NativeEngine
 // Package: com.olens.launcher.core.NativeEngine
 // -----------------------------------------------------------------------------
-
-#[no_mangle]
-pub extern "system" fn Java_com_olens_launcher_core_NativeEngine_nativeInit(
-    _env: JNIEnv,
-    _class: JClass,
-) -> jint {
-    1 // Success status code
-}
-
-#[no_mangle]
-pub extern "system" fn Java_com_olens_launcher_core_NativeEngine_nativeQuickScore(
-    mut env: JNIEnv,
-    _class: JClass,
-    query_j: JString,
-    target_j: JString,
-) -> jint {
-    let query: String = match env.get_string(&query_j) {
-        Ok(s) => s.into(),
-        Err(_) => return -1,
-    };
-    let target: String = match env.get_string(&target_j) {
-        Ok(s) => s.into(),
-        Err(_) => return -1,
-    };
-
-    match fuzzy_score(&query, &target) {
-        Some(score) => score as jint,
-        None => -1,
-    }
-}
 
 #[no_mangle]
 pub extern "system" fn Java_com_olens_launcher_core_NativeEngine_nativeCalculateWaveOffsets(

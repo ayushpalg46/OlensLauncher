@@ -82,32 +82,6 @@ class AppRepository(private val context: Context) {
                 )
                 appList.add(item)
             }
-        } else {
-            val mainIntent = Intent(Intent.ACTION_MAIN, null).apply {
-                addCategory(Intent.CATEGORY_LAUNCHER)
-            }
-            val resolveInfos = pm.queryIntentActivities(mainIntent, 0)
-            for (info in resolveInfos) {
-                val pkg = info.activityInfo.packageName
-                if (pkg == context.packageName) continue
-
-                val label = info.loadLabel(pm).toString()
-                val customIcon = if (selectedIconPack.isNotBlank()) {
-                    IconPackManager.getCustomIcon(context, selectedIconPack, pkg, info.activityInfo.name)
-                } else null
-                val icon = customIcon ?: info.loadIcon(pm)
-
-                val item = AppItem(
-                    packageName = pkg,
-                    activityName = info.activityInfo.name,
-                    label = label,
-                    customLabel = customLabelsMap[pkg],
-                    icon = icon,
-                    isFavorite = favoritesSet.contains(pkg),
-                    isHidden = hiddenSet.contains(pkg)
-                )
-                appList.add(item)
-            }
         }
 
         // Sort alphabetically by label
@@ -168,17 +142,8 @@ class AppRepository(private val context: Context) {
     fun launchApp(app: AppItem) {
         try {
             val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as? LauncherApps
-            if (launcherApps != null) {
-                val component = ComponentName(app.packageName, app.activityName)
-                launcherApps.startMainActivity(component, Process.myUserHandle(), null, null)
-            } else {
-                val intent = context.packageManager.getLaunchIntentForPackage(app.packageName)?.apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
-                }
-                if (intent != null) {
-                    context.startActivity(intent)
-                }
-            }
+            val component = ComponentName(app.packageName, app.activityName)
+            launcherApps?.startMainActivity(component, Process.myUserHandle(), null, null)
         } catch (e: Exception) {
             e.printStackTrace()
         }

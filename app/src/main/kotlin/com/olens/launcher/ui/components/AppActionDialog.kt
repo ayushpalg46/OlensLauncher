@@ -45,12 +45,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
 import com.olens.launcher.R
 import com.olens.launcher.model.AppItem
 import com.olens.launcher.service.OlensNotificationListener
 import com.olens.launcher.util.AppShortcutItem
 import com.olens.launcher.util.AppShortcutsHelper
-import com.olens.launcher.util.ImageUtils
 
 @Composable
 fun AppActionDialog(
@@ -124,7 +124,7 @@ fun AppActionDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     val appIconBmp = remember(app.packageName) {
-                        app.icon?.let { ImageUtils.drawableToBitmap(it) }
+                        app.icon?.toBitmap()
                     }
                     if (appIconBmp != null) {
                         Image(
@@ -169,7 +169,7 @@ fun AppActionDialog(
                             ) {
                                 if (shortcut.icon != null) {
                                     val shortcutBmp = remember(shortcut.id) {
-                                        ImageUtils.drawableToBitmap(shortcut.icon)
+                                        shortcut.icon.toBitmap()
                                     }
                                     Image(
                                         bitmap = shortcutBmp.asImageBitmap(),

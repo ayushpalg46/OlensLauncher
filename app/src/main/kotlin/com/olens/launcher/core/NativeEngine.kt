@@ -19,14 +19,6 @@ object NativeEngine {
         }
     }
 
-    fun init(): Boolean {
-        return if (isNativeLoaded) {
-            nativeInit() == 1
-        } else {
-            true
-        }
-    }
-
     /**
      * Compute ergonomic wave offsets for alphabet scrubber items.
      * @param selectedIndex The continuous floating index of current touch
@@ -103,8 +95,6 @@ object NativeEngine {
     }
 
     // --- Native JNI declarations ---
-    private external fun nativeInit(): Int
-    private external fun nativeQuickScore(query: String, target: String): Int
     private external fun nativeCalculateWaveOffsets(
         selectedIndex: Float,
         totalCount: Int,
