@@ -44,7 +44,7 @@ object LauncherSwitcherHelper {
     fun openSystemHomeSettings(context: Context) {
         try {
             context.packageManager.clearPackagePreferredActivities(context.packageName)
-        } catch (_: Exception) {}
+        } catch (e: Exception) {}
 
         // 1. Android 10+ standard Home Settings
         try {
@@ -53,7 +53,7 @@ object LauncherSwitcherHelper {
             }
             context.startActivity(intent)
             return
-        } catch (_: Exception) {}
+        } catch (e: Exception) {}
 
         // 2. Default Apps Settings
         try {
@@ -62,7 +62,7 @@ object LauncherSwitcherHelper {
             }
             context.startActivity(intent)
             return
-        } catch (_: Exception) {}
+        } catch (e: Exception) {}
 
         // 3. Home chooser fallback
         try {
@@ -74,7 +74,7 @@ object LauncherSwitcherHelper {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             context.startActivity(chooser)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             Toast.makeText(context, "Please change default home app in Phone Settings", Toast.LENGTH_LONG).show()
         }
     }
@@ -90,7 +90,7 @@ object LauncherSwitcherHelper {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             context.startActivity(intent)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             openSystemHomeSettings(context)
         }
     }
