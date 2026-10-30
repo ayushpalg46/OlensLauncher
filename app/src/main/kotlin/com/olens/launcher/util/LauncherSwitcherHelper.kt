@@ -82,16 +82,49 @@ object LauncherSwitcherHelper {
     /**
      * Directly launches a specific other launcher
      */
-    fun launchSpecificLauncher(context: Context, launcher: OtherLauncherItem) {
+    /**
+     * Emergency Escape: Instantly switches away from Olens Launcher and restores
+     * the user's previous/stock launcher as default.
+     */
+    fun emergencyEscape(context: Context) {
+        val pm = context.packageManager
+
+        // 1. Clear Olens as preferred launcher
         try {
-            val intent = Intent(Intent.ACTION_MAIN).apply {
-                addCategory(Intent.CATEGORY_HOME)
-                component = ComponentName(launcher.packageName, launcher.activityName)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            pm.clearPackagePreferredActivities(context.packageName)
+        } catch (_: Exception) {}
+
+        // 2. Identify the stock or alternative launcher on the device
+        val others = getOtherLaunchers(context)
+        val target = others.firstOrNull { item ->
+            val p = item.packageName.lowercase()
+            p.contains("sec.android.app.launcher") || // Samsung One UI Home
+            p.contains("nexuslauncher") || // Google Pixel Launcher
+            p.contains("miui.home") || // Xiaomi / Poco
+            p.contains("coloros") || p.contains("oppo") || // Oppo / Realme
+            p.contains("vivo") || p.contains("bbk") || // Vivo
+            p.contains("motorola") || p.contains("moto") || // Moto
+            p.contains("huawei") || p.contains("emui") || // Huawei / Honor
+            p.contains("launcher") || p.contains("home")
+        } ?: others.firstOrNull()
+
+        // 3. Immediately launch the old launcher if detected
+        if (target != null) {
+            try {
+                val intent = Intent(Intent.ACTION_MAIN).apply {
+                    addCategory(Intent.CATEGORY_HOME)
+                    component = ComponentName(target.packageName, target.activityName)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
+                context.startActivity(intent)
+                Toast.makeText(context, "Switching to ${target.label}...", Toast.LENGTH_SHORT).show()
+            } catch (_: Exception) {
+                openSystemHomeSettings(context)
+                return
             }
-            context.startActivity(intent)
-        } catch (e: Exception) {
-            openSystemHomeSettings(context)
         }
+
+        // 4. Prompt system home settings to make old launcher default
+        openSystemHomeSettings(context)
     }
 }

@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -192,6 +193,43 @@ fun HomeScreen(
 
                 // Search Results
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    val q = searchQuery.trim().lowercase()
+                    if (q in listOf("escape", "exit", "quit", "switch", "old", "default")) {
+                        item(key = "emergency_escape_search_item") {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.35f))
+                                    .clickable {
+                                        com.olens.launcher.util.LauncherSwitcherHelper.emergencyEscape(context)
+                                    }
+                                    .padding(horizontal = 24.dp, vertical = 14.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.ExitToApp,
+                                    contentDescription = "Emergency Escape",
+                                    tint = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.size(26.dp)
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Column {
+                                    Text(
+                                        text = "Emergency Escape",
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+                                    Text(
+                                        text = "Instantly exit Olens & restore old launcher",
+                                        fontSize = 12.5.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    }
+
                     items(
                         items = searchResults,
                         key = { it.packageName }

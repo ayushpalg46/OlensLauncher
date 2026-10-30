@@ -1,5 +1,6 @@
 package com.olens.launcher.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DarkMode
+import androidx.compose.material.icons.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.FormatSize
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LabelOff
@@ -78,6 +80,45 @@ fun SettingsDialog(
             val otherLaunchers = remember { com.olens.launcher.util.LauncherSwitcherHelper.getOtherLaunchers(context) }
 
             Column(modifier = Modifier.fillMaxWidth()) {
+                // Emergency Escape Button (Instantly exits & restores old launcher)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.35f),
+                            shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+                        )
+                        .clickable {
+                            com.olens.launcher.util.LauncherSwitcherHelper.emergencyEscape(context)
+                            onDismiss()
+                        }
+                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.ExitToApp,
+                        contentDescription = "Emergency Escape",
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(26.dp)
+                    )
+                    Spacer(modifier = Modifier.width(14.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Emergency Escape",
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Text(
+                            text = "Instantly exit Olens & restore old launcher",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
                 // Switch / Restore Old Launcher
                 Row(
                     modifier = Modifier
