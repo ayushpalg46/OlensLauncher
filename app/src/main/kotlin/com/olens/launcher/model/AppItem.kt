@@ -11,6 +11,7 @@ data class AppItem(
     val isFavorite: Boolean = false,
     val isHidden: Boolean = false,
     val unreadNotifications: Int = 0,
+    val notificationSummary: String? = null,
     val installTime: Long = 0L
 ) {
     val displayLabel: String

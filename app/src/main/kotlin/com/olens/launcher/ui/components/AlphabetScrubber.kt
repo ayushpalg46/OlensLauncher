@@ -1,6 +1,7 @@
 package com.olens.launcher.ui.components
 
 import android.view.HapticFeedbackConstants
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -8,7 +9,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +34,7 @@ import com.olens.launcher.core.NativeEngine
 import kotlin.math.roundToInt
 
 val ALPHABET_ITEMS = listOf(
-    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+    "★", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
     "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
     "U", "V", "W", "X", "Y", "Z", "#"
 )
@@ -168,6 +171,31 @@ fun AlphabetScrubber(
                         }
                     )
                 }
+            }
+        }
+
+        // Floating thumb magnifier bubble
+        if (isTouching && lastSelectedIndex in ALPHABET_ITEMS.indices) {
+            val selectedLetter = ALPHABET_ITEMS[lastSelectedIndex]
+            val bubbleX = if (isRightAligned) -72 else 72
+            val bubbleY = (currentTouchY - 28f).coerceIn(0f, (scrubberHeight - 56f).coerceAtLeast(0f))
+
+            Box(
+                modifier = Modifier
+                    .offset { IntOffset(bubbleX.dp.roundToPx(), bubbleY.roundToInt()) }
+                    .size(56.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.95f),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = selectedLetter,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }

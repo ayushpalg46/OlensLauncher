@@ -99,6 +99,38 @@ fun HomeScreen(
         map
     }
 
+    val findNearestIndex: (String) -> Int? = { letter ->
+        if (letter == "★") {
+            0
+        } else {
+            letterIndexMap[letter] ?: run {
+                val start = ALPHABET_ITEMS.indexOf(letter)
+                if (start != -1) {
+                    var found: Int? = null
+                    // Look forward
+                    for (i in start + 1 until ALPHABET_ITEMS.size) {
+                        val key = ALPHABET_ITEMS[i]
+                        if (letterIndexMap.containsKey(key)) {
+                            found = letterIndexMap[key]
+                            break
+                        }
+                    }
+                    if (found == null) {
+                        // Look backward
+                        for (i in start - 1 downTo 0) {
+                            val key = ALPHABET_ITEMS[i]
+                            if (letterIndexMap.containsKey(key)) {
+                                found = letterIndexMap[key]
+                                break
+                            }
+                        }
+                    }
+                    found
+                } else null
+            }
+        }
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -191,7 +223,7 @@ fun HomeScreen(
             AlphabetScrubber(
                 onLetterSelected = { letter ->
                     currentScrubLetter = letter
-                    val targetIndex = letterIndexMap[letter]
+                    val targetIndex = findNearestIndex(letter)
                     if (targetIndex != null) {
                         coroutineScope.launch {
                             listState.scrollToItem(targetIndex)
@@ -207,31 +239,6 @@ fun HomeScreen(
                     if (scrubberOnRight) Alignment.CenterEnd else Alignment.CenterStart
                 )
             )
-        }
-
-        // Scrubbing Letter Bubble Preview overlay
-        AnimatedVisibility(
-            visible = isScrubbing && currentScrubLetter.isNotEmpty(),
-            enter = fadeIn(),
-            exit = fadeOut(),
-            modifier = Modifier.align(Alignment.Center)
-        ) {
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
-                        shape = androidx.compose.foundation.shape.CircleShape
-                    )
-                    .padding(28.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = currentScrubLetter,
-                    fontSize = 42.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
         }
 
         // Long press dialog

@@ -113,6 +113,28 @@ class AppRepository(private val context: Context) {
     }
 
     /**
+     * Update active notification previews on app icons in real-time
+     */
+    fun updateNotification(packageName: String, summary: String?) {
+        _installedApps.value = _installedApps.value.map { app ->
+            if (app.packageName == packageName) {
+                app.copy(
+                    notificationSummary = summary,
+                    unreadNotifications = if (summary != null) 1 else 0
+                )
+            } else app
+        }
+        _favoriteApps.value = _favoriteApps.value.map { app ->
+            if (app.packageName == packageName) {
+                app.copy(
+                    notificationSummary = summary,
+                    unreadNotifications = if (summary != null) 1 else 0
+                )
+            } else app
+        }
+    }
+
+    /**
      * Search apps using the high-performance Rust fuzzy engine
      */
     fun searchApps(query: String): List<AppItem> {

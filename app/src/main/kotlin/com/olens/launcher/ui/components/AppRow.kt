@@ -74,14 +74,27 @@ fun AppRow(
 
         Spacer(modifier = Modifier.width(18.dp))
 
-        // App Label
-        Text(
-            text = app.displayLabel,
-            fontSize = 17.sp,
-            fontWeight = FontWeight.Normal,
-            color = MaterialTheme.colorScheme.onBackground,
-            maxLines = 1
-        )
+        // App Label and optional Notification Preview
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = app.displayLabel,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onBackground,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+            )
+
+            if (!app.notificationSummary.isNullOrBlank()) {
+                Text(
+                    text = app.notificationSummary,
+                    fontSize = 12.5.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                )
+            }
+        }
     }
 }
 
