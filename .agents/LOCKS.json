@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Registry of active file locks held by collaborating AI agents to prevent edit collisions.",
+  "active_locks": []
+}

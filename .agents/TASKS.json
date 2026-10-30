@@ -1,0 +1,113 @@
+{
+  "version": "1.0",
+  "project": "OlensLauncher",
+  "sprint": "Niagara Parity & Polish",
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Rust Native Core Engine (Fuzzy Search & Wave Scrubber Physics)",
+      "assigned_to": "CLI",
+      "status": "COMPLETED",
+      "verified_by": "IDE",
+      "verification_status": "APPROVED",
+      "files": ["core-engine/src/lib.rs", "core-engine/Cargo.toml"]
+    },
+    {
+      "id": "TASK-002",
+      "title": "CI/CD GitHub Actions APK Pipeline & Fixes",
+      "assigned_to": "CLI & IDE",
+      "status": "COMPLETED",
+      "verified_by": "BOTH",
+      "verification_status": "APPROVED",
+      "files": [".github/workflows/build-apk.yml"]
+    },
+    {
+      "id": "TASK-003",
+      "title": "Ergonomic Wave Alphabet Scrubber with Thumb Magnifier Lens",
+      "assigned_to": "CLI",
+      "status": "COMPLETED",
+      "verified_by": "IDE",
+      "verification_status": "APPROVED",
+      "files": ["app/src/main/kotlin/com/olens/launcher/ui/components/AlphabetScrubber.kt"]
+    },
+    {
+      "id": "TASK-004",
+      "title": "Status Bar Notification Interceptor & Real-Time Inline Previews",
+      "assigned_to": "CLI",
+      "status": "COMPLETED",
+      "verified_by": "IDE",
+      "verification_status": "APPROVED",
+      "files": [
+        "app/src/main/kotlin/com/olens/launcher/service/OlensNotificationListener.kt",
+        "app/src/main/kotlin/com/olens/launcher/ui/components/AppRow.kt"
+      ]
+    },
+    {
+      "id": "TASK-005",
+      "title": "Pure AMOLED Black (OLED) Theme & Wallpaper Scrim",
+      "assigned_to": "IDE",
+      "status": "COMPLETED",
+      "verified_by": "CLI",
+      "verification_status": "APPROVED",
+      "files": [
+        "app/src/main/kotlin/com/olens/launcher/ui/theme/Theme.kt",
+        "app/src/main/kotlin/com/olens/launcher/ui/HomeScreen.kt"
+      ]
+    },
+    {
+      "id": "TASK-006",
+      "title": "Preferences Dialog (Left/Right Hand, Haptics, Hidden Apps, Weather Glance)",
+      "assigned_to": "IDE",
+      "status": "COMPLETED",
+      "verified_by": "CLI",
+      "verification_status": "APPROVED",
+      "files": ["app/src/main/kotlin/com/olens/launcher/ui/components/SettingsDialog.kt"]
+    },
+    {
+      "id": "TASK-007",
+      "title": "Emergency Launcher Switcher & Default Home Integrations",
+      "assigned_to": "CLI",
+      "status": "COMPLETED",
+      "verified_by": "IDE",
+      "verification_status": "APPROVED",
+      "files": ["app/src/main/kotlin/com/olens/launcher/util/LauncherSwitcherHelper.kt"]
+    },
+    {
+      "id": "TASK-008",
+      "title": "Custom App Renaming & Persistence in DataStore",
+      "assigned_to": "CLI",
+      "status": "COMPLETED",
+      "verified_by": "IDE",
+      "verification_status": "APPROVED",
+      "files": [
+        "app/src/main/kotlin/com/olens/launcher/data/UserPreferences.kt",
+        "app/src/main/kotlin/com/olens/launcher/ui/components/AppActionDialog.kt"
+      ]
+    },
+    {
+      "id": "TASK-009",
+      "title": "Kotlin Primitive Array Extension Bugfix (IntArray.mapNotNull)",
+      "assigned_to": "IDE",
+      "status": "COMPLETED",
+      "verified_by": "CLI",
+      "verification_status": "APPROVED",
+      "files": ["app/src/main/kotlin/com/olens/launcher/data/AppRepository.kt"]
+    },
+    {
+      "id": "TASK-010",
+      "title": "Icon Pack Support (Standard Nova/Apex/ADW icon pack format parser)",
+      "assigned_to": "IDE",
+      "status": "BACKLOG",
+      "priority": "MEDIUM",
+      "description": "Allow user to pick and apply third-party icon packs from Play Store"
+    },
+    {
+      "id": "TASK-011",
+      "title": "Android AppWidgetHost Integration",
+      "assigned_to": "CLI",
+      "status": "BACKLOG",
+      "priority": "LOW",
+      "description": "Optional home screen widget slot above favorites"
+    }
+  ]
+}
