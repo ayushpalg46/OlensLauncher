@@ -54,6 +54,7 @@ class AppRepository(private val context: Context) {
 
         val favoritesSet = userPreferences.favoritePackages.first()
         val hiddenSet = userPreferences.hiddenPackages.first()
+        val customLabelsMap = userPreferences.getAllCustomLabels()
 
         val appList = mutableListOf<AppItem>()
 
@@ -70,6 +71,7 @@ class AppRepository(private val context: Context) {
                     packageName = pkg,
                     activityName = activity.name,
                     label = label,
+                    customLabel = customLabelsMap[pkg],
                     icon = icon,
                     isFavorite = favoritesSet.contains(pkg),
                     isHidden = hiddenSet.contains(pkg)
@@ -92,6 +94,7 @@ class AppRepository(private val context: Context) {
                     packageName = pkg,
                     activityName = info.activityInfo.name,
                     label = label,
+                    customLabel = customLabelsMap[pkg],
                     icon = icon,
                     isFavorite = favoritesSet.contains(pkg),
                     isHidden = hiddenSet.contains(pkg)
@@ -207,6 +210,11 @@ class AppRepository(private val context: Context) {
     suspend fun toggleHide(app: AppItem) {
         val newStatus = !app.isHidden
         userPreferences.setHidden(app.packageName, newStatus)
+        reloadApps()
+    }
+
+    suspend fun renameApp(app: AppItem, newName: String?) {
+        userPreferences.setCustomLabel(app.packageName, newName)
         reloadApps()
     }
 }

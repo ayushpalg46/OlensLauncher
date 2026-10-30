@@ -93,5 +93,31 @@ class UserPreferences(private val context: Context) {
             prefs[PURE_AMOLED_KEY] = enabled
         }
     }
+
+    suspend fun setCustomLabel(packageName: String, label: String?) {
+        context.dataStore.edit { prefs ->
+            val key = androidx.datastore.preferences.core.stringPreferencesKey("custom_label_$packageName")
+            if (label.isNullOrBlank()) {
+                prefs.remove(key)
+            } else {
+                prefs[key] = label
+            }
+        }
+    }
+
+    suspend fun getAllCustomLabels(): Map<String, String> {
+        val prefs = context.dataStore.data.first()
+        val result = mutableMapOf<String, String>()
+        for ((key, value) in prefs.asMap()) {
+            if (key.name.startsWith("custom_label_") && value is String) {
+                result[key.name.removePrefix("custom_label_")] = value
+            }
+        }
+        return result
+    }
+
+    fun getCustomLabelFlow(packageName: String): Flow<String?> = context.dataStore.data.map { prefs ->
+        prefs[androidx.datastore.preferences.core.stringPreferencesKey("custom_label_$packageName")]
+    }
 }
 

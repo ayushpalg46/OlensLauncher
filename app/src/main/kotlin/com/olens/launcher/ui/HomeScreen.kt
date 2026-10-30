@@ -303,7 +303,10 @@ fun HomeScreen(
                     coroutineScope.launch { repository.toggleHide(app) }
                 },
                 onAppInfo = { repository.openAppInfo(app) },
-                onUninstall = { repository.uninstallApp(app) }
+                onUninstall = { repository.uninstallApp(app) },
+                onRename = { newName ->
+                    coroutineScope.launch { repository.renameApp(app, newName) }
+                }
             )
         }
 
