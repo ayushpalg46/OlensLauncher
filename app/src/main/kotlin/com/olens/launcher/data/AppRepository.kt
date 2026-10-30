@@ -55,6 +55,7 @@ class AppRepository(private val context: Context) {
         val favoritesSet = userPreferences.favoritePackages.first()
         val hiddenSet = userPreferences.hiddenPackages.first()
         val customLabelsMap = userPreferences.getAllCustomLabels()
+        val selectedIconPack = userPreferences.iconPackPackage.first()
 
         val appList = mutableListOf<AppItem>()
 
@@ -65,7 +66,10 @@ class AppRepository(private val context: Context) {
                 if (pkg == context.packageName) continue // Skip Olens itself
 
                 val label = activity.label?.toString() ?: activity.applicationInfo.loadLabel(pm).toString()
-                val icon = activity.getIcon(0)
+                val customIcon = if (selectedIconPack.isNotBlank()) {
+                    IconPackManager.getCustomIcon(context, selectedIconPack, pkg, activity.name)
+                } else null
+                val icon = customIcon ?: activity.getIcon(0)
 
                 val item = AppItem(
                     packageName = pkg,
@@ -88,7 +92,10 @@ class AppRepository(private val context: Context) {
                 if (pkg == context.packageName) continue
 
                 val label = info.loadLabel(pm).toString()
-                val icon = info.loadIcon(pm)
+                val customIcon = if (selectedIconPack.isNotBlank()) {
+                    IconPackManager.getCustomIcon(context, selectedIconPack, pkg, info.activityInfo.name)
+                } else null
+                val icon = customIcon ?: info.loadIcon(pm)
 
                 val item = AppItem(
                     packageName = pkg,

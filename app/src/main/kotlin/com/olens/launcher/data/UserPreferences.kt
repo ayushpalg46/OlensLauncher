@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +25,12 @@ class UserPreferences(private val context: Context) {
         val ICON_SIZE_KEY = intPreferencesKey("icon_size_dp")
         val HIDE_NAMES_KEY = booleanPreferencesKey("hide_app_names")
         val SHOW_WEATHER_KEY = booleanPreferencesKey("show_weather_glance")
+        val FONT_FAMILY_KEY = stringPreferencesKey("font_family")
+        val ACCENT_COLOR_KEY = stringPreferencesKey("accent_color")
+        val ICON_PACK_KEY = stringPreferencesKey("icon_pack_package")
+        val ICON_SHAPE_KEY = stringPreferencesKey("icon_shape")
+        val WALLPAPER_DIM_KEY = intPreferencesKey("wallpaper_dim_percent")
+        val CLOCK_24H_KEY = booleanPreferencesKey("clock_24h_format")
     }
 
     val favoritePackages: Flow<Set<String>> = context.dataStore.data.map { prefs ->
@@ -66,6 +73,54 @@ class UserPreferences(private val context: Context) {
 
     val showWeather: Flow<Boolean> = context.dataStore.data.map { prefs ->
         prefs[SHOW_WEATHER_KEY] ?: true
+    }
+
+    val fontFamily: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[FONT_FAMILY_KEY] ?: "Default"
+    }
+
+    val accentColor: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[ACCENT_COLOR_KEY] ?: "Niagara Cyan"
+    }
+
+    val iconPackPackage: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[ICON_PACK_KEY] ?: ""
+    }
+
+    val iconShape: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[ICON_SHAPE_KEY] ?: "Circle"
+    }
+
+    val wallpaperDimPercent: Flow<Int> = context.dataStore.data.map { prefs ->
+        prefs[WALLPAPER_DIM_KEY] ?: 25
+    }
+
+    val clock24hFormat: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[CLOCK_24H_KEY] ?: true
+    }
+
+    suspend fun setFontFamily(font: String) {
+        context.dataStore.edit { prefs -> prefs[FONT_FAMILY_KEY] = font }
+    }
+
+    suspend fun setAccentColor(colorName: String) {
+        context.dataStore.edit { prefs -> prefs[ACCENT_COLOR_KEY] = colorName }
+    }
+
+    suspend fun setIconPackPackage(pkg: String) {
+        context.dataStore.edit { prefs -> prefs[ICON_PACK_KEY] = pkg }
+    }
+
+    suspend fun setIconShape(shape: String) {
+        context.dataStore.edit { prefs -> prefs[ICON_SHAPE_KEY] = shape }
+    }
+
+    suspend fun setWallpaperDimPercent(percent: Int) {
+        context.dataStore.edit { prefs -> prefs[WALLPAPER_DIM_KEY] = percent }
+    }
+
+    suspend fun setClock24hFormat(is24h: Boolean) {
+        context.dataStore.edit { prefs -> prefs[CLOCK_24H_KEY] = is24h }
     }
 
     suspend fun setFavorite(packageName: String, isFavorite: Boolean) {

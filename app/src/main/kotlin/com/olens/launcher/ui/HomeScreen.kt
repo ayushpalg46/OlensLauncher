@@ -72,6 +72,9 @@ fun HomeScreen(
     val iconSizeDp by repository.preferences.iconSize.collectAsState(initial = 40)
     val hideAppNames by repository.preferences.hideAppNames.collectAsState(initial = false)
     val showWeather by repository.preferences.showWeather.collectAsState(initial = true)
+    val iconShape by repository.preferences.iconShape.collectAsState(initial = "Circle")
+    val wallpaperDimPercent by repository.preferences.wallpaperDimPercent.collectAsState(initial = 25)
+    val clock24hFormat by repository.preferences.clock24hFormat.collectAsState(initial = true)
 
     var isSearchActive by remember { mutableStateOf(false) }
     var isSettingsOpen by remember { mutableStateOf(false) }
@@ -170,17 +173,18 @@ fun HomeScreen(
             .statusBarsPadding()
     ) {
         // Niagara-style soft wallpaper legibility scrim
+        val dimAlpha = (wallpaperDimPercent / 100f).coerceIn(0f, 0.90f)
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
                     brush = androidx.compose.ui.graphics.Brush.horizontalGradient(
                         colors = if (scrubberOnRight) listOf(
-                            androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.25f),
+                            androidx.compose.ui.graphics.Color.Black.copy(alpha = dimAlpha),
                             androidx.compose.ui.graphics.Color.Transparent
                         ) else listOf(
                             androidx.compose.ui.graphics.Color.Transparent,
-                            androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.25f)
+                            androidx.compose.ui.graphics.Color.Black.copy(alpha = dimAlpha)
                         )
                     )
                 )
@@ -260,6 +264,7 @@ fun HomeScreen(
                             onClick = { repository.launchApp(app) },
                             onLongClick = { selectedAppForAction = app },
                             iconSizeDp = iconSizeDp,
+                            iconShape = iconShape,
                             hideLabel = false
                         )
                     }
@@ -310,7 +315,8 @@ fun HomeScreen(
                         HomeHeader(
                             onSearchClick = { isSearchActive = true },
                             onSettingsClick = { isSettingsOpen = true },
-                            showWeather = showWeather
+                            showWeather = showWeather,
+                            is24Hour = clock24hFormat
                         )
                     }
 
@@ -334,6 +340,7 @@ fun HomeScreen(
                                 onClick = { repository.launchApp(app) },
                                 onLongClick = { selectedAppForAction = app },
                                 iconSizeDp = iconSizeDp,
+                                iconShape = iconShape,
                                 hideLabel = hideAppNames
                             )
                         }
@@ -352,6 +359,7 @@ fun HomeScreen(
                             onClick = { repository.launchApp(app) },
                             onLongClick = { selectedAppForAction = app },
                             iconSizeDp = iconSizeDp,
+                            iconShape = iconShape,
                             hideLabel = false
                         )
                     }

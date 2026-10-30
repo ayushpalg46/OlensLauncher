@@ -25,8 +25,14 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val pureAmoled by repository.preferences.pureAmoledMode.collectAsState(initial = true)
+            val accentColor by repository.preferences.accentColor.collectAsState(initial = "Niagara Cyan")
+            val fontFamily by repository.preferences.fontFamily.collectAsState(initial = "Default")
 
-            OlensTheme(pureAmoled = pureAmoled) {
+            OlensTheme(
+                pureAmoled = pureAmoled,
+                accentColorName = accentColor,
+                fontFamilyName = fontFamily
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Transparent

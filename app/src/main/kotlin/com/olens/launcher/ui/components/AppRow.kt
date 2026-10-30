@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,10 +39,20 @@ fun AppRow(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     iconSizeDp: Int = 40,
+    iconShape: String = "Circle",
     hideLabel: Boolean = false
 ) {
     val bitmap = remember(app.packageName) {
         app.icon?.let { ImageUtils.drawableToBitmap(it) }
+    }
+
+    val shape = remember(iconShape) {
+        when (iconShape.lowercase()) {
+            "rounded square", "square" -> RoundedCornerShape(10.dp)
+            "squircle" -> RoundedCornerShape(16.dp)
+            "teardrop" -> RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomEnd = 4.dp, bottomStart = 16.dp)
+            else -> CircleShape
+        }
     }
 
     Row(
@@ -61,7 +72,9 @@ fun AppRow(
                 Image(
                     bitmap = bitmap.asImageBitmap(),
                     contentDescription = app.displayLabel,
-                    modifier = Modifier.size(iconSizeDp.dp)
+                    modifier = Modifier
+                        .size(iconSizeDp.dp)
+                        .clip(shape)
                 )
             }
             if (app.unreadNotifications > 0) {

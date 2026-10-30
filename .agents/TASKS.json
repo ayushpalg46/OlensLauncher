@@ -96,10 +96,11 @@
     {
       "id": "TASK-010",
       "title": "Icon Pack Support (Standard Nova/Apex/ADW icon pack format parser)",
-      "assigned_to": "IDE",
-      "status": "BACKLOG",
-      "priority": "MEDIUM",
-      "description": "Allow user to pick and apply third-party icon packs from Play Store"
+      "assigned_to": "CLI & IDE",
+      "status": "COMPLETED",
+      "verified_by": "CLI",
+      "verification_status": "APPROVED",
+      "files": ["app/src/main/kotlin/com/olens/launcher/data/IconPackManager.kt"]
     },
     {
       "id": "TASK-011",
@@ -125,6 +126,22 @@
         "app/src/main/kotlin/com/olens/launcher/ui/components/HomeHeader.kt",
         "app/src/main/kotlin/com/olens/launcher/ui/components/AppActionDialog.kt",
         "app/src/main/kotlin/com/olens/launcher/ui/components/AlphabetScrubber.kt"
+      ]
+    },
+    {
+      "id": "TASK-013",
+      "title": "Full Customization Suite (Wallpaper picker/dimming, Font families, 7 Accent palettes, Icon shapes/sizes, 24h clock)",
+      "assigned_to": "CLI & IDE",
+      "status": "COMPLETED",
+      "verified_by": "CLI",
+      "verification_status": "APPROVED",
+      "files": [
+        "app/src/main/kotlin/com/olens/launcher/ui/theme/Theme.kt",
+        "app/src/main/kotlin/com/olens/launcher/data/UserPreferences.kt",
+        "app/src/main/kotlin/com/olens/launcher/ui/components/SettingsDialog.kt",
+        "app/src/main/kotlin/com/olens/launcher/MainActivity.kt",
+        "app/src/main/kotlin/com/olens/launcher/ui/components/AppRow.kt",
+        "app/src/main/kotlin/com/olens/launcher/ui/HomeScreen.kt"
       ]
     }
   ]

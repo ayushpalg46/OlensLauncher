@@ -54,6 +54,7 @@ fun HomeHeader(
     onSearchClick: () -> Unit,
     onSettingsClick: () -> Unit,
     showWeather: Boolean = true,
+    is24Hour: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -63,8 +64,9 @@ fun HomeHeader(
     var isCharging by remember { mutableStateOf(false) }
 
     // Time ticker
-    LaunchedEffect(Unit) {
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    LaunchedEffect(is24Hour) {
+        val pattern = if (is24Hour) "HH:mm" else "h:mm a"
+        val timeFormat = SimpleDateFormat(pattern, Locale.getDefault())
         val dateFormat = SimpleDateFormat("EEEE, MMM d", Locale.getDefault())
         while (true) {
             val now = Date()
