@@ -332,10 +332,6 @@ fun HomeScreen(
                             hideLabel = false
                         )
                     }
-                            onClick = { repository.launchApp(app) },
-                            onLongClick = { selectedAppForAction = app }
-                        )
-                    }
 
                     item(key = "bottom_spacer") {
                         Spacer(modifier = Modifier.height(80.dp))
