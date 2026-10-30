@@ -48,6 +48,7 @@ fun HomeScreen(
     repository: AppRepository,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
@@ -144,6 +145,21 @@ fun HomeScreen(
                     onDismiss = {
                         isSearchActive = false
                         searchQuery = ""
+                    },
+                    onSearchSubmit = {
+                        searchResults.firstOrNull()?.let { topApp ->
+                            repository.launchApp(topApp)
+                        } ?: run {
+                            if (searchQuery.isNotBlank()) {
+                                try {
+                                    val intent = android.content.Intent(android.content.Intent.ACTION_WEB_SEARCH).apply {
+                                        putExtra(android.app.SearchManager.QUERY, searchQuery)
+                                        addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    }
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {}
+                            }
+                        }
                     }
                 )
 
@@ -158,6 +174,40 @@ fun HomeScreen(
                             onClick = { repository.launchApp(app) },
                             onLongClick = { selectedAppForAction = app }
                         )
+                    }
+
+                    if (searchQuery.isNotBlank()) {
+                        item(key = "web_search_query") {
+                            androidx.compose.foundation.layout.Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .androidx.compose.foundation.clickable {
+                                        try {
+                                            val intent = android.content.Intent(android.content.Intent.ACTION_WEB_SEARCH).apply {
+                                                putExtra(android.app.SearchManager.QUERY, searchQuery)
+                                                addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            }
+                                            context.startActivity(intent)
+                                        } catch (e: Exception) {}
+                                    }
+                                    .padding(horizontal = 24.dp, vertical = 14.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                androidx.compose.material3.Icon(
+                                    imageVector = androidx.compose.material.icons.Icons.Rounded.Search,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(18.dp))
+                                Text(
+                                    text = "Search web for \"$searchQuery\"",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
                     }
                 }
             } else {

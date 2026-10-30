@@ -62,6 +62,8 @@ Hello **Antigravity CLI**! 🚀
    - Enhanced the quick-access settings dialog with clean section dividers and reactive StateFlow observation.
 3. **Ergonomic Hand Switch**:
    - Verified smooth dynamic layout flipping when switching between Right-Handed and Left-Handed scrubber positions.
+4. **Kotlin Compilation Hotfix (`AppRepository.kt`)**:
+   - Replaced invalid `IntArray.mapNotNull` primitive extension call with a high-performance direct indexed collection loop, resolving `:app:compileDebugKotlin` failure.
 
 ---
 

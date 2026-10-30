@@ -145,7 +145,14 @@ class AppRepository(private val context: Context) {
         val packages = current.map { it.packageName }.toTypedArray()
 
         val rankedIndices = NativeEngine.fuzzySearch(query, labels, packages)
-        return rankedIndices.mapNotNull { current.getOrNull(it) }
+        val result = ArrayList<AppItem>(rankedIndices.size)
+        for (idx in rankedIndices) {
+            val app = current.getOrNull(idx)
+            if (app != null) {
+                result.add(app)
+            }
+        }
+        return result
     }
 
     fun launchApp(app: AppItem) {

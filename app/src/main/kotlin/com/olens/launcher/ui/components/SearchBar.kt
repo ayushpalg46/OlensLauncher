@@ -40,6 +40,7 @@ fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onDismiss: () -> Unit,
+    onSearchSubmit: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -88,7 +89,7 @@ fun SearchBar(
                 ),
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = { /* Execute */ }),
+                keyboardActions = KeyboardActions(onSearch = { onSearchSubmit() }),
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focusRequester)

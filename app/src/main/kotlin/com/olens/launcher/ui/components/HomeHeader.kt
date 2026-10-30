@@ -101,13 +101,18 @@ fun HomeHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Time Display
+            // Time Display (Tapping opens default Clock/Alarm)
             Text(
                 text = currentTime,
                 fontSize = 44.sp,
                 fontWeight = FontWeight.Light,
                 color = MaterialTheme.colorScheme.onBackground,
-                letterSpacing = (-1).sp
+                letterSpacing = (-1).sp,
+                modifier = Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = { openClockApp(context) }
+                )
             )
 
             // Top Actions: Search & Settings
@@ -148,11 +153,17 @@ fun HomeHeader(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Date (Tapping opens default Calendar)
             Text(
                 text = currentDate,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
+                modifier = Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = { openCalendarApp(context) }
+                )
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -163,20 +174,64 @@ fun HomeHeader(
             )
             Spacer(modifier = Modifier.width(12.dp))
 
-            Icon(
-                imageVector = if (isCharging) Icons.Rounded.BatteryChargingFull else Icons.Rounded.BatteryStd,
-                contentDescription = "Battery",
-                modifier = Modifier.size(16.dp),
-                tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = "$batteryLevel%",
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
-            )
+            // Battery (Tapping opens Battery Usage Settings)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = { openBatterySettings(context) }
+                )
+            ) {
+                Icon(
+                    imageVector = if (isCharging) Icons.Rounded.BatteryChargingFull else Icons.Rounded.BatteryStd,
+                    contentDescription = "Battery",
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "$batteryLevel%",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
+                )
+            }
         }
     }
+}
+
+private fun openClockApp(context: Context) {
+    try {
+        val intent = Intent(android.provider.AlarmClock.ACTION_SHOW_ALARMS).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        try {
+            val fallback = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_CLOCK).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(fallback)
+        } catch (ignored: Exception) {}
+    }
+}
+
+private fun openCalendarApp(context: Context) {
+    try {
+        val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_CALENDAR).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
+    } catch (e: Exception) {}
+}
+
+private fun openBatterySettings(context: Context) {
+    try {
+        val intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
+    } catch (e: Exception) {}
 }
 
