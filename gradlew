@@ -51,3 +51,4 @@ fi
 
 # Escape application args
 exec "$JAVACMD" "-Dorg.gradle.appname=$APP_BASE_NAME" -classpath "$CLASSPATH" org.gradle.wrapper.GradleWrapperMain "$@"
+

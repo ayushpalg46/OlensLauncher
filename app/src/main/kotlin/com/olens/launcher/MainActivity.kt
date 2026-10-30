@@ -39,3 +39,4 @@ class MainActivity : ComponentActivity() {
         (application as OlensApplication).appRepository.reloadApps()
     }
 }
+

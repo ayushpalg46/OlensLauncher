@@ -27,14 +27,20 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android NDK & CMake
+      - name: Setup Android SDK & NDK
         run: |
+          SDK_DIR="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          echo "ANDROID_SDK_ROOT=$SDK_DIR" >> $GITHUB_ENV
+          echo "ANDROID_HOME=$SDK_DIR" >> $GITHUB_ENV
           yes | sdkmanager --licenses || true
-          sdkmanager --install "ndk;26.1.10909125" "cmake;3.22.1"
-          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/26.1.10909125" >> $GITHUB_ENV
+          sdkmanager --install "ndk;26.1.10909125" "cmake;3.22.1" || true
+          NDK_DIR="$SDK_DIR/ndk/26.1.10909125"
+          if [ ! -d "$NDK_DIR" ]; then
+            NDK_DIR=$(find "$SDK_DIR/ndk" -maxdepth 1 -mindepth 1 2>/dev/null | sort -V | tail -n 1)
+          fi
+          echo "Found NDK at: $NDK_DIR"
+          echo "ANDROID_NDK_HOME=$NDK_DIR" >> $GITHUB_ENV
+          echo "NDK_HOME=$NDK_DIR" >> $GITHUB_ENV
 
       - name: Setup Rust Toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -42,7 +48,7 @@ jobs:
           targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android,i686-linux-android
 
       - name: Install cargo-ndk
-        run: cargo install cargo-ndk
+        run: cargo install cargo-ndk --locked || cargo install cargo-ndk
 
       - name: Build Rust Native Engine (JNI)
         run: |
@@ -61,11 +67,11 @@ jobs:
           gradle-version: 8.7
 
       - name: Make Gradlew Executable
-        run: chmod +x gradlew || true
+        run: chmod +x gradlew
 
       - name: Build Debug & Release APK
         run: |
-          gradle assembleDebug assembleRelease --stacktrace
+          ./gradlew assembleDebug assembleRelease --stacktrace || gradle assembleDebug assembleRelease --stacktrace
 
       - name: Prepare APK Outputs
         run: |
@@ -86,3 +92,4 @@ jobs:
         with:
           files: output-apks/*.apk
           generate_release_notes: true
+

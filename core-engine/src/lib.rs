@@ -1,5 +1,5 @@
-use jni::objects::{JClass, JFloatArray, JIntArray, JObjectArray, JString};
-use jni::sys::{jfloat, jint, jsize, jstring};
+use jni::objects::{JClass, JObjectArray, JString};
+use jni::sys::{jfloat, jfloatArray, jint, jintArray, jsize};
 use jni::JNIEnv;
 use serde::{Deserialize, Serialize};
 
@@ -195,6 +195,22 @@ pub extern "system" fn Java_com_olens_launcher_core_NativeEngine_nativeFuzzySear
 
         if let Some(score) = fuzzy_score(&query, &label) {
             scored.push((i, score));
+            continue;
+        }
+
+        // Fallback: check package name if available
+        let pkg_opt: Option<String> = env
+            .get_object_array_element(&packages_j, i as jsize)
+            .ok()
+            .and_then(|obj| {
+                let pkg_str = JString::from(obj);
+                env.get_string(&pkg_str).ok().map(|s| s.into())
+            });
+
+        if let Some(pkg_name) = pkg_opt {
+            if let Some(score) = fuzzy_score(&query, &pkg_name) {
+                scored.push((i, score / 2));
+            }
         }
     }
 
@@ -235,3 +251,4 @@ mod tests {
         assert_eq!(offsets[0], 0.0);
     }
 }
+

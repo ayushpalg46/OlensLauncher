@@ -94,3 +94,4 @@ private fun drawableToBitmap(drawable: Drawable): Bitmap {
     drawable.draw(canvas)
     return bitmap
 }
+

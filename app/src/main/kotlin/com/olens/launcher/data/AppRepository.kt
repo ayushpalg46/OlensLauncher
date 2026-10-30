@@ -181,3 +181,4 @@ class AppRepository(private val context: Context) {
         reloadApps()
     }
 }
+

@@ -36,6 +36,15 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
+fun OlensLauncherTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    dynamicColor: Boolean = true,
+    content: @Composable () -> Unit
+) {
+    OlensTheme(darkTheme = darkTheme, dynamicColor = dynamicColor, content = content)
+}
+
+@Composable
 fun OlensTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
@@ -55,3 +64,4 @@ fun OlensTheme(
         content = content
     )
 }
+

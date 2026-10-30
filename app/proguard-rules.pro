@@ -3,3 +3,4 @@
     native <methods>;
 }
 -keep class com.olens.launcher.core.NativeEngine { *; }
+
