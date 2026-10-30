@@ -39,6 +39,7 @@ import com.olens.launcher.ui.components.AppActionDialog
 import com.olens.launcher.ui.components.AppRow
 import com.olens.launcher.ui.components.HomeHeader
 import com.olens.launcher.ui.components.SearchBar
+import com.olens.launcher.ui.components.SettingsDialog
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -56,6 +57,7 @@ fun HomeScreen(
     val scrubberOnRight by repository.preferences.scrubberOnRight.collectAsState(initial = true)
 
     var isSearchActive by remember { mutableStateOf(false) }
+    var isSettingsOpen by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
     var selectedAppForAction by remember { mutableStateOf<AppItem?>(null) }
     var isScrubbing by remember { mutableStateOf(false) }
@@ -134,7 +136,8 @@ fun HomeScreen(
                     // Header Clock & Glanceable info
                     item(key = "header") {
                         HomeHeader(
-                            onSearchClick = { isSearchActive = true }
+                            onSearchClick = { isSearchActive = true },
+                            onSettingsClick = { isSettingsOpen = true }
                         )
                     }
 
@@ -246,5 +249,14 @@ fun HomeScreen(
                 onUninstall = { repository.uninstallApp(app) }
             )
         }
+
+        // Settings dialog
+        if (isSettingsOpen) {
+            SettingsDialog(
+                repository = repository,
+                onDismiss = { isSettingsOpen = false }
+            )
+        }
     }
 }
+
