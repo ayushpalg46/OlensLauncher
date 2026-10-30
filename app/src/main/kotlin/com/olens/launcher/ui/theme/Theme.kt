@@ -1,17 +1,12 @@
 package com.olens.launcher.ui.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 
 // Niagara-style signature accent palettes
@@ -98,7 +93,6 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun OlensTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
     pureAmoled: Boolean = false,
     accentColorName: String = "Niagara Cyan",
     fontFamilyName: String = "Default",
@@ -106,16 +100,13 @@ fun OlensTheme(
 ) {
     val selectedAccent = ACCENT_PALETTES[accentColorName] ?: Pair(Color(0xFF38BDF8), Color(0xFF0284C7))
 
-    val baseScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColorScheme.copy(
+    val baseScheme = if (darkTheme) {
+        DarkColorScheme.copy(
             primary = selectedAccent.first,
             secondary = selectedAccent.second
         )
-        else -> LightColorScheme.copy(
+    } else {
+        LightColorScheme.copy(
             primary = selectedAccent.first,
             secondary = selectedAccent.second
         )

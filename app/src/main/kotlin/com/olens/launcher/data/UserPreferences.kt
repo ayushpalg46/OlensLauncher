@@ -20,7 +20,6 @@ class UserPreferences(private val context: Context) {
         val HIDDEN_KEY = stringSetPreferencesKey("hidden_packages")
         val HAPTICS_KEY = booleanPreferencesKey("enable_haptics")
         val SCRUBBER_SIDE_KEY = booleanPreferencesKey("scrubber_on_right")
-        val MAX_FAVORITES_KEY = intPreferencesKey("max_favorites")
         val PURE_AMOLED_KEY = booleanPreferencesKey("pure_amoled_mode")
         val ICON_SIZE_KEY = intPreferencesKey("icon_size_dp")
         val HIDE_NAMES_KEY = booleanPreferencesKey("hide_app_names")
@@ -53,10 +52,6 @@ class UserPreferences(private val context: Context) {
 
     val scrubberOnRight: Flow<Boolean> = context.dataStore.data.map { prefs ->
         prefs[SCRUBBER_SIDE_KEY] ?: true
-    }
-
-    val maxFavorites: Flow<Int> = context.dataStore.data.map { prefs ->
-        prefs[MAX_FAVORITES_KEY] ?: 8
     }
 
     val pureAmoledMode: Flow<Boolean> = context.dataStore.data.map { prefs ->

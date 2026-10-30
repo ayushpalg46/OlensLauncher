@@ -7,7 +7,6 @@ import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Process
-import android.os.UserHandle
 import android.provider.Settings
 import com.olens.launcher.core.NativeEngine
 import com.olens.launcher.model.AppItem
@@ -22,7 +21,7 @@ import kotlinx.coroutines.withContext
 
 class AppRepository(private val context: Context) {
 
-    private val userPreferences = UserPreferences(context)
+    val preferences = UserPreferences(context)
     private val scope = CoroutineScope(Dispatchers.IO)
 
     private val _installedApps = MutableStateFlow<List<AppItem>>(emptyList())
@@ -33,9 +32,6 @@ class AppRepository(private val context: Context) {
 
     private val _hiddenApps = MutableStateFlow<List<AppItem>>(emptyList())
     val hiddenApps: StateFlow<List<AppItem>> = _hiddenApps.asStateFlow()
-
-    val preferences: UserPreferences
-        get() = userPreferences
 
     init {
         reloadApps()
@@ -52,10 +48,10 @@ class AppRepository(private val context: Context) {
         val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as? LauncherApps
         val userHandle = Process.myUserHandle()
 
-        val favoritesSet = userPreferences.favoritePackages.first()
-        val hiddenSet = userPreferences.hiddenPackages.first()
-        val customLabelsMap = userPreferences.getAllCustomLabels()
-        val selectedIconPack = userPreferences.iconPackPackage.first()
+        val favoritesSet = preferences.favoritePackages.first()
+        val hiddenSet = preferences.hiddenPackages.first()
+        val customLabelsMap = preferences.getAllCustomLabels()
+        val selectedIconPack = preferences.iconPackPackage.first()
 
         val appList = mutableListOf<AppItem>()
 
@@ -175,18 +171,18 @@ class AppRepository(private val context: Context) {
 
     suspend fun toggleFavorite(app: AppItem) {
         val newStatus = !app.isFavorite
-        userPreferences.setFavorite(app.packageName, newStatus)
+        preferences.setFavorite(app.packageName, newStatus)
         reloadApps()
     }
 
     suspend fun toggleHide(app: AppItem) {
         val newStatus = !app.isHidden
-        userPreferences.setHidden(app.packageName, newStatus)
+        preferences.setHidden(app.packageName, newStatus)
         reloadApps()
     }
 
     suspend fun renameApp(app: AppItem, newName: String?) {
-        userPreferences.setCustomLabel(app.packageName, newName)
+        preferences.setCustomLabel(app.packageName, newName)
         reloadApps()
     }
 }

@@ -1,7 +1,6 @@
 package com.olens.launcher
 
 import android.app.Application
-import com.olens.launcher.core.NativeEngine
 import com.olens.launcher.data.AppRepository
 
 class OlensApplication : Application() {
@@ -12,9 +11,6 @@ class OlensApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        
-        // Initialize Native Rust Engine
-        NativeEngine.init()
         
         // Initialize App Repository
         appRepository = AppRepository(this)

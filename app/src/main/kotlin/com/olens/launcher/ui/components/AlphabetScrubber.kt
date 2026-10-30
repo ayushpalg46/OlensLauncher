@@ -42,7 +42,7 @@ val ALPHABET_ITEMS = listOf(
 @Composable
 fun AlphabetScrubber(
     onLetterSelected: (String) -> Unit,
-    onScrubStateChange: (Boolean) -> Unit,
+    onScrubStateChange: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier,
     enableHaptics: Boolean = true,
     isRightAligned: Boolean = true

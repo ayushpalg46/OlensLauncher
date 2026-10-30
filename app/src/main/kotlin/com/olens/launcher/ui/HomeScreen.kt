@@ -80,8 +80,6 @@ fun HomeScreen(
     var isSettingsOpen by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
     var selectedAppForAction by remember { mutableStateOf<AppItem?>(null) }
-    var isScrubbing by remember { mutableStateOf(false) }
-    var currentScrubLetter by remember { mutableStateOf("") }
 
     // Intercept back button when searching
     BackHandler(enabled = isSearchActive) {
@@ -142,26 +140,8 @@ fun HomeScreen(
             letterIndexMap[letter] ?: run {
                 val start = ALPHABET_ITEMS.indexOf(letter)
                 if (start != -1) {
-                    var found: Int? = null
-                    // Look forward
-                    for (i in start + 1 until ALPHABET_ITEMS.size) {
-                        val key = ALPHABET_ITEMS[i]
-                        if (letterIndexMap.containsKey(key)) {
-                            found = letterIndexMap[key]
-                            break
-                        }
-                    }
-                    if (found == null) {
-                        // Look backward
-                        for (i in start - 1 downTo 0) {
-                            val key = ALPHABET_ITEMS[i]
-                            if (letterIndexMap.containsKey(key)) {
-                                found = letterIndexMap[key]
-                                break
-                            }
-                        }
-                    }
-                    found
+                    (ALPHABET_ITEMS.drop(start + 1) + ALPHABET_ITEMS.take(start).reversed())
+                        .firstNotNullOfOrNull { letterIndexMap[it] }
                 } else null
             }
         }
@@ -375,16 +355,11 @@ fun HomeScreen(
         if (!isSearchActive) {
             AlphabetScrubber(
                 onLetterSelected = { letter ->
-                    currentScrubLetter = letter
-                    val targetIndex = findNearestIndex(letter)
-                    if (targetIndex != null) {
+                    findNearestIndex(letter)?.let { targetIndex ->
                         coroutineScope.launch {
                             listState.scrollToItem(targetIndex)
                         }
                     }
-                },
-                onScrubStateChange = { scrubbing ->
-                    isScrubbing = scrubbing
                 },
                 enableHaptics = enableHaptics,
                 isRightAligned = scrubberOnRight,
