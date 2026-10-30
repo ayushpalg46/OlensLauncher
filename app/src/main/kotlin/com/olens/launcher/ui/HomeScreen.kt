@@ -6,17 +6,24 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,6 +63,9 @@ fun HomeScreen(
     val favoriteApps by repository.favoriteApps.collectAsState()
     val enableHaptics by repository.preferences.enableHaptics.collectAsState(initial = true)
     val scrubberOnRight by repository.preferences.scrubberOnRight.collectAsState(initial = true)
+    val iconSizeDp by repository.preferences.iconSize.collectAsState(initial = 40)
+    val hideAppNames by repository.preferences.hideAppNames.collectAsState(initial = false)
+    val showWeather by repository.preferences.showWeather.collectAsState(initial = true)
 
     var isSearchActive by remember { mutableStateOf(false) }
     var isSettingsOpen by remember { mutableStateOf(false) }
@@ -137,6 +147,23 @@ fun HomeScreen(
             .fillMaxSize()
             .statusBarsPadding()
     ) {
+        // Niagara-style soft wallpaper legibility scrim
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = androidx.compose.ui.graphics.Brush.horizontalGradient(
+                        colors = if (scrubberOnRight) listOf(
+                            androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.25f),
+                            androidx.compose.ui.graphics.Color.Transparent
+                        ) else listOf(
+                            androidx.compose.ui.graphics.Color.Transparent,
+                            androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.25f)
+                        )
+                    )
+                )
+        )
+
         Column(modifier = Modifier.fillMaxSize()) {
             if (isSearchActive) {
                 SearchBar(
@@ -178,23 +205,23 @@ fun HomeScreen(
 
                     if (searchQuery.isNotBlank()) {
                         item(key = "web_search_query") {
-                            androidx.compose.foundation.layout.Row(
+                            Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .androidx.compose.foundation.clickable {
+                                    .clickable {
                                         try {
                                             val intent = android.content.Intent(android.content.Intent.ACTION_WEB_SEARCH).apply {
                                                 putExtra(android.app.SearchManager.QUERY, searchQuery)
                                                 addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
                                             }
                                             context.startActivity(intent)
-                                        } catch (e: Exception) {}
+                                        } catch (_: Exception) {}
                                     }
                                     .padding(horizontal = 24.dp, vertical = 14.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                androidx.compose.material3.Icon(
-                                    imageVector = androidx.compose.material.icons.Icons.Rounded.Search,
+                                Icon(
+                                    imageVector = Icons.Rounded.Search,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(24.dp)
@@ -219,7 +246,8 @@ fun HomeScreen(
                     item(key = "header") {
                         HomeHeader(
                             onSearchClick = { isSearchActive = true },
-                            onSettingsClick = { isSettingsOpen = true }
+                            onSettingsClick = { isSettingsOpen = true },
+                            showWeather = showWeather
                         )
                     }
 
@@ -241,7 +269,9 @@ fun HomeScreen(
                             AppRow(
                                 app = app,
                                 onClick = { repository.launchApp(app) },
-                                onLongClick = { selectedAppForAction = app }
+                                onLongClick = { selectedAppForAction = app },
+                                iconSizeDp = iconSizeDp,
+                                hideLabel = hideAppNames
                             )
                         }
                         item(key = "favorites_spacer") {
@@ -256,6 +286,12 @@ fun HomeScreen(
                     ) { app ->
                         AppRow(
                             app = app,
+                            onClick = { repository.launchApp(app) },
+                            onLongClick = { selectedAppForAction = app },
+                            iconSizeDp = iconSizeDp,
+                            hideLabel = false
+                        )
+                    }
                             onClick = { repository.launchApp(app) },
                             onLongClick = { selectedAppForAction = app }
                         )

@@ -7,6 +7,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,7 +35,9 @@ fun AppRow(
     app: AppItem,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    iconSizeDp: Int = 40,
+    hideLabel: Boolean = false
 ) {
     val bitmap = remember(app.packageName) {
         app.icon?.let { drawableToBitmap(it) }
@@ -48,16 +51,16 @@ fun AppRow(
                 onClick = onClick,
                 onLongClick = onLongClick
             )
-            .padding(horizontal = 24.dp, vertical = 11.dp),
+            .padding(horizontal = 24.dp, vertical = 9.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // App Icon
-        Box(modifier = Modifier.size(38.dp)) {
+        Box(modifier = Modifier.size(iconSizeDp.dp)) {
             if (bitmap != null) {
                 Image(
                     bitmap = bitmap.asImageBitmap(),
                     contentDescription = app.displayLabel,
-                    modifier = Modifier.size(38.dp)
+                    modifier = Modifier.size(iconSizeDp.dp)
                 )
             }
             if (app.unreadNotifications > 0) {
@@ -72,27 +75,29 @@ fun AppRow(
             }
         }
 
-        Spacer(modifier = Modifier.width(18.dp))
+        if (!hideLabel) {
+            Spacer(modifier = Modifier.width(18.dp))
 
-        // App Label and optional Notification Preview
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = app.displayLabel,
-                fontSize = 17.sp,
-                fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colorScheme.onBackground,
-                maxLines = 1,
-                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
-            )
-
-            if (!app.notificationSummary.isNullOrBlank()) {
+            // App Label and optional Notification Preview
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = app.notificationSummary,
-                    fontSize = 12.5.sp,
-                    color = MaterialTheme.colorScheme.primary,
+                    text = app.displayLabel,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 1,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
+
+                if (!app.notificationSummary.isNullOrBlank()) {
+                    Text(
+                        text = app.notificationSummary,
+                        fontSize = 12.5.sp,
+                        color = MaterialTheme.colorScheme.primary,
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     }

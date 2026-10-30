@@ -20,6 +20,9 @@ class UserPreferences(private val context: Context) {
         val SCRUBBER_SIDE_KEY = booleanPreferencesKey("scrubber_on_right")
         val MAX_FAVORITES_KEY = intPreferencesKey("max_favorites")
         val PURE_AMOLED_KEY = booleanPreferencesKey("pure_amoled_mode")
+        val ICON_SIZE_KEY = intPreferencesKey("icon_size_dp")
+        val HIDE_NAMES_KEY = booleanPreferencesKey("hide_app_names")
+        val SHOW_WEATHER_KEY = booleanPreferencesKey("show_weather_glance")
     }
 
     val favoritePackages: Flow<Set<String>> = context.dataStore.data.map { prefs ->
@@ -50,6 +53,18 @@ class UserPreferences(private val context: Context) {
 
     val pureAmoledMode: Flow<Boolean> = context.dataStore.data.map { prefs ->
         prefs[PURE_AMOLED_KEY] ?: true
+    }
+
+    val iconSize: Flow<Int> = context.dataStore.data.map { prefs ->
+        prefs[ICON_SIZE_KEY] ?: 40
+    }
+
+    val hideAppNames: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[HIDE_NAMES_KEY] ?: false
+    }
+
+    val showWeather: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[SHOW_WEATHER_KEY] ?: true
     }
 
     suspend fun setFavorite(packageName: String, isFavorite: Boolean) {
@@ -91,6 +106,24 @@ class UserPreferences(private val context: Context) {
     suspend fun setPureAmoledMode(enabled: Boolean) {
         context.dataStore.edit { prefs ->
             prefs[PURE_AMOLED_KEY] = enabled
+        }
+    }
+
+    suspend fun setIconSize(sizeDp: Int) {
+        context.dataStore.edit { prefs ->
+            prefs[ICON_SIZE_KEY] = sizeDp
+        }
+    }
+
+    suspend fun setHideAppNames(hide: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[HIDE_NAMES_KEY] = hide
+        }
+    }
+
+    suspend fun setShowWeather(show: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[SHOW_WEATHER_KEY] = show
         }
     }
 
