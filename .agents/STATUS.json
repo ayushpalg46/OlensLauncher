@@ -1,11 +1,14 @@
 {
   "project": "OlensLauncher",
   "version": "1.0.0",
-  "last_updated": "2026-10-30T15:35:00Z",
+  "last_updated": "2026-10-30T15:38:00Z",
   "repository": "https://github.com/ayushpalg46/OlensLauncher.git",
   "active_branch": "main",
   "build_system": {
-    "languages": ["Kotlin 2.0.20", "Rust 1.98.1"],
+    "languages": [
+      "Kotlin 2.0.20",
+      "Rust 1.98.1"
+    ],
     "android_gradle_plugin": "8.5.2",
     "gradle": "8.7",
     "target_sdk": 34,
@@ -31,10 +34,10 @@
         "Trigonometric Alphabet Wave Scrubber with thumb magnifier bubble",
         "At-A-Glance digital clock ticker, date, battery % & charging indicators",
         "Live status bar notification interception & inline preview subtitles",
-        "Favorites pinned section at drawer top",
+        "Favorites pinned section at drawer top with ★ header",
         "Instant Rust-powered fuzzy search with web search fallback",
         "App long-press context menu with Rename, Hide, App Info, Uninstall",
-        "Settings dialog with Left/Right-hand mode, Haptics toggle, and Hidden Apps manager",
+        "Settings dialog with Left/Right-hand mode, Haptics toggle, Pure AMOLED, and Hidden Apps manager",
         "Emergency Escape subsystem to restore old launcher"
       ]
     },
@@ -45,10 +48,27 @@
         "One-tap emergency escape with preferred activity clearing",
         "Home app settings intent fallbacks"
       ]
+    },
+    "coordination-system": {
+      "status": "ACTIVE",
+      "protocol": "MACP v1.0.0",
+      "components": [
+        ".agents/PROTOCOL.md",
+        ".agents/STATUS.json",
+        ".agents/LOCKS.json",
+        ".agents/TASKS.md",
+        ".agents/COMMUNICATION.md",
+        ".agents/ARCHITECTURE.md"
+      ]
     }
   },
   "current_sprint": {
     "goal": "Polish & feature parity with Niagara Launcher; multi-agent coordination setup",
-    "active_agents": ["Antigravity CLI", "Antigravity IDE"]
+    "active_agents": [
+      "Antigravity CLI",
+      "Antigravity IDE"
+    ],
+    "open_tasks_count": 4,
+    "completed_tasks_count": 8
   }
 }
